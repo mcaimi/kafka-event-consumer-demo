@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Quarkus Reactive Messaging - Kafka Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/wingcss/0.1.8/wing.min.css"/>
+    <style>
+        input[type=number] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            -webkit-transition: .5s;
+            transition: .5s;
+            outline: 0;
+            font-family: 'Open Sans', serif;
+        }
+        #flip {
+            padding: 5px;
+            text-align: center;
+        }
+
+        #panel {
+            padding: 50px;
+            display: none;
+            border: solid 1px #c3c3c3;
+            color: #FFFFFF;
+            background-color: #333030;
+            border-radius: 4px;
+        }
+
+        #events {
+            border-radius: 0px;
+        }
+
+        #container {
+            border: solid 1px #c3c3c3;
+            border-radius: 6px;
+        }
+    </style>
+    <!-- Load AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="events_controller.js"></script>
+    <script>
+    $(document).ready(function() {
+        $("#flip").click(function() {
+            $("#panel").slideToggle("slow");
+        });
+        $("#panel").slideDown("slow");
+        $("#events").show("slow");
+    });
+    </script>
+  </head>
+  <body ng-app="EventsManagement" ng-controller="EventsManagementController">
+    <div class="container" id="container">
+        <center><div id="flip"><img src="redhat-logo.png"/></div></center>
+        <div id="panel">
+            <center><h1>Event Status Panel</h1></center>
+            <p>
+                This application demonstrates Receiving message updates from a Kafka Broker using Quarkus.
+                This simple frontend interacts via REST APIs with the Quarkus Backend.
+            </p>
+            <p>Behind the scenes, we have:
+                <ul>
+                    <li>AMQ Streams and Kafka APIs</li>
+                    <li>RESTEasy powering the REST API</li>
+                    <li>CDI based dependency injection framework</li>
+                    <li>Smallrye Ractive Messaging</li>
+                    <li>Openshift as a Container Platform.</li>
+                    <li>Tekton for CI/CD.</li>
+                </ul>
+            </p>
+        </div>
+
+        <div id="events">
+            <center>
+                <h3>Events Stream...</h3>
+                <div class="entries"/>
+            </center>
+        </div>
+
+        <script>
+            var source = new EventSource("/consumer/get");
+            source.onmessage = (event) => {
+              var json = JSON.parse(event.data);
+              var el = document.getElementById(`#${json.id}`);
+              if (el == null) {
+                var row = $(`<div class='col-4' id='${json.id}'>Event # <i>${json.id}: ${json.message}</i> | <strong>${json.severity}</strong></div>`);
+                $(".entries").prepend(row);
+              } else {
+                $(`#${json.id}`).html((index, html) => {
+                    return html.replace("Pending", `\$\xA0${json.severity}`);
+                });
+              }
+            };
+        </script>
+
+        <div><center><h1>Powered By: </h1><img src="quarkus-logo.png" style="width:30%;"/><span style="display:inline-block; width: 50px;"></span><img src="openshift.png" style="width:20%;"/></center></div>
+        <span style="display:inline-block; height: 20px;"/>
+    </div>
+  </body>
+</html>
