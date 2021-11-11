@@ -41,10 +41,7 @@
             border-radius: 6px;
         }
     </style>
-    <!-- Load AngularJS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="events_controller.js"></script>
     <script>
     $(document).ready(function() {
         $("#flip").click(function() {
@@ -79,23 +76,21 @@
         <div id="events">
             <center>
                 <h3>Events Stream...</h3>
-                <div class="entries"/>
+                <div class="entries"></div>
             </center>
         </div>
 
         <script>
             var source = new EventSource("/consumer/get");
             source.onmessage = (event) => {
-              var json = JSON.parse(event.data);
-              var el = document.getElementById(`#${json.id}`);
-              if (el == null) {
-                var row = $(`<div class='col-4' id='${json.id}'>Event # <i>${json.id}: ${json.message}</i> | <strong>${json.severity}</strong></div>`);
-                $(".entries").prepend(row);
-              } else {
-                $(`#${json.id}`).html((index, html) => {
-                    return html.replace("Pending", `\$\xA0${json.severity}`);
-                });
-              }
+                var json = JSON.parse(event.data);
+                var el = $(`#${json.id}`);
+                if (el.html() == null) {
+                    var row = $(`<div class='col-4' id='${json.id}'>Event# <i>${json.id}</i>: <b>${json.message}</b> | <strong>${json.severity}</strong></div>`);
+                    $(".entries").prepend(row);
+                } else {
+                    el.html(`Event# <i>${json.id}</i>: <b>${json.message}</b> | <strong>${json.severity}</strong>`);
+                }
             };
         </script>
 
