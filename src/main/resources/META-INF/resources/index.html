@@ -18,6 +18,7 @@
             outline: 0;
             font-family: 'Open Sans', serif;
         }
+        
         #flip {
             padding: 5px;
             text-align: center;
@@ -54,7 +55,7 @@
   </head>
   <body ng-app="EventsManagement" ng-controller="EventsManagementController">
     <div class="container" id="container">
-        <center><div id="flip"><img src="redhat-logo.png"/></div></center>
+        <center><div id="flip"><img src="redhat-logo.png"/><img src="kafka.png" style="width:30%"/></div></center>
         <div id="panel">
             <center><h1>Event Status Panel</h1></center>
             <p>
@@ -65,7 +66,7 @@
                 <ul>
                     <li>AMQ Streams and Kafka APIs</li>
                     <li>RESTEasy powering the REST API</li>
-                    <li>CDI based dependency injection framework</li>
+                    <li>Server Sent Events</li>
                     <li>Smallrye Ractive Messaging</li>
                     <li>Openshift as a Container Platform.</li>
                     <li>Tekton for CI/CD.</li>
@@ -73,12 +74,15 @@
             </p>
         </div>
 
-        <div id="events">
-            <center>
-                <h3>Events Stream...</h3>
-                <div class="entries"></div>
-            </center>
-        </div>
+        <center>
+            <h3>Events Stream...</h3>
+            <table id="event-table">
+                <thead><tr><th>Event ID</th><th>Event Message</th><th>Event Severity</th></tr></div>
+            </table>
+            <div id="events">
+                <tbody><div class="entries"></div></tbody>
+            </div>
+        </center>
 
         <script>
             var source = new EventSource("/consumer/get");
@@ -86,10 +90,10 @@
                 var json = JSON.parse(event.data);
                 var el = $(`#${json.id}`);
                 if (el.html() == null) {
-                    var row = $(`<div class='col-4' id='${json.id}'>Event# <i>${json.id}</i>: <b>${json.message}</b> | <strong>${json.severity}</strong></div>`);
+                    var row = $(`<div class='col-4' id='${json.id}'><tr><td><i>${json.id}</i></td><td><b>${json.message}</b></td><td><strong>${json.severity}</strong></td></tr></div>`);
                     $(".entries").prepend(row);
                 } else {
-                    el.html(`Event# <i>${json.id}</i>: <b>${json.message}</b> | <strong>${json.severity}</strong>`);
+                    el.html(`<tr><td><i>${json.id}</i></td><td><b>${json.message}</b></td><td><strong>${json.severity}</strong></td></tr>`);
                 }
             };
         </script>
