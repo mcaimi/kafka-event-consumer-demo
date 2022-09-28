@@ -7,7 +7,7 @@ spec:
   type: image
   params:
   - name: url
-    value: image-registry.openshift-image-registry.svc:5000/kafka-event-consumer-demo/event-consumer
+    value: image-registry.openshift-image-registry.svc:5000/quarkus-consumer/event-consumer
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineResource
@@ -19,7 +19,7 @@ spec:
   - name: url
     value: https://github.com/mcaimi/kafka-event-consumer-demo
   - name: revision
-    value: master
+    value: native
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineResource
