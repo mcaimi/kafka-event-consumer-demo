@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: registry.kube-system.svc.cluster.local/event-consumer
+  repository: image-registry.openshift-image-registry.svc:5000/quarkus-consumer/event-consumer
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
