@@ -72,18 +72,14 @@ If you want to learn more about building native executables, please consult http
 This example pipeline needs Nexus to store the Java artifact (the pipeline produces an _über-jar_).
 Please follow the steps described [here](https://github.com/mcaimi/k8s-demo-app) to deploy an instance of Sonatype Nexus on Openshift/Minikube.
 
-### Running the example on Minikube
-
-To run the demo on Minikube a local minikube cluster with 4vCPU and 8GB of RAM is required. Also, be sure to enable the ingress and OLM addons when deploying the instance.
-
-Have a look [here](https://github.com/mcaimi/kafka-event-producer-demo) to install dependencies to run this demo project.
+It also needs the Openshift Pipelines and GitOps Operators installed beforehand on the target cluster.
 
 ### Install and run tekton pipeline manifests
 
 1. Create a new project:
 
 ```bash
-$ oc new-project kafka-event-consumer-demo
+$ oc new-project quarkus-consumer
 ```
 
 2. Install tekton pipeline objects:
@@ -92,7 +88,7 @@ For the compile-test-archive pipeline:
 
 ```bash
 for i in pipeline-resources maven-pvc quarkus-maven-task quarkus-nexus-task quarkus-maven-pipeline; do
-  oc create -f tekton/$i.yaml -n kafka-event-consumer-demo
+  oc create -f tekton/$i.yaml -n quarkus-consumer
 done
 ```
 
@@ -100,14 +96,22 @@ For the container image build pipeline:
 
 ```bash
 for i in build-pvc quarkus-build-task quarkus-build-pipeline; do
-  oc create -f tekton/$i.yaml -n kafka-event-consumer-demo
+  oc create -f tekton/$i.yaml -n quarkus-consumer
 done
 ```
 
 3. Run the pipeline
 
 ```bash
-$ oc create -f tekton/quarkus-maven-pipelinerun.yaml -n kafka-event-consumer-demo
+$ oc create -f tekton/quarkus-maven-pipelinerun.yaml -n quarkus-consumer
+```
+
+### Deploy with ArgoCD
+
+1. Add the application descriptor to the Openshift GitOps Argo Cluster
+
+```bash
+$ oc apply -k openshift/consumer-argocd/
 ```
 
 ## Related Guides
