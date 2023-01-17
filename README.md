@@ -132,6 +132,6 @@ The application comes with a simple Angular frontend listening on the default qu
 Container image build pipelines currently require the privileged SCC to be attached to the 'pipeline' ServiceAccount in order to successfully run:
 
 ```bash
-oc adm add-scc-to-user privileged -z system:serviceaccount:kafka-event-consumer-demo:pipeline
+oc adm policy add-scc-to-user privileged -z system:serviceaccount:kafka-event-consumer-demo:pipeline
 ```
 
