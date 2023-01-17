@@ -18,7 +18,67 @@
             outline: 0;
             font-family: 'Open Sans', serif;
         }
-        
+
+        body {
+            background-color: #333030;
+        }
+
+        table {
+            table-layout: fixed;
+            width: 100%;
+            border-collapse: collapse;
+            border: 2px solid #c3c3c3;
+            border-radius: 1px;
+        }
+
+        thead th:nth-child(1) {
+            width: 30%;
+        }
+
+        thead th:nth-child(2) {
+            width: 55%;
+        }
+
+        thead th:nth-child(3) {
+            width: 15%;
+        }
+
+        th, td {
+            padding: 20px;
+        }
+
+        thead, tfoot {
+            color: white;
+            text-shadow: 1px 1px 1px black;
+        }
+
+        thead th,
+        tfoot th,
+        tfoot td {
+            background: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 0.1),
+                rgba(0, 0, 0, 0.5)
+            );
+            border: 1px solid black;
+        }
+
+        #entries tr:nth-child(1) {
+            width: 30%
+        }
+
+        #entries tr:nth-child(2) {
+            width: 55%
+        }
+
+        #entries tr:nth-child(3) {
+            width: 15%
+        }
+
+        #entries tr {
+            border: 1px solid black;
+        }
+
         #flip {
             padding: 5px;
             text-align: center;
@@ -35,11 +95,13 @@
 
         #events {
             border-radius: 0px;
+            border: solid 0px #333030;
         }
 
         #container {
-            border: solid 1px #c3c3c3;
+            border: solid 1px #5d5c5c;
             border-radius: 6px;
+            background-color: #FFFFFF;
         }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -77,11 +139,14 @@
         <center>
             <h3>Events Stream...</h3>
             <table id="event-table">
-                <thead><tr><th>Event ID</th><th>Event Message</th><th>Event Severity</th></tr></div>
+                <thead><tr>
+                    <th scope="col">Event ID</th>
+                    <th scope="col">Event Message</th>
+                    <th scope="col">Event Severity</th>
+                </tr>
+                <tbody class="entries">
+                </tbody>
             </table>
-            <div id="events">
-                <tbody><div class="entries"></div></tbody>
-            </div>
         </center>
 
         <script>
@@ -90,10 +155,10 @@
                 var json = JSON.parse(event.data);
                 var el = $(`#${json.id}`);
                 if (el.html() == null) {
-                    var row = $(`<div class='col-4' id='${json.id}'><tr><td><i>${json.id}</i></td><td><b>${json.message}</b></td><td><strong>${json.severity}</strong></td></tr></div>`);
+                    var row = $(`<tr id='${json.id}'><td><i>${json.id}</i></td><td><b>${json.message}</b></td><td><strong>${json.severity}</strong></td></tr>`);
                     $(".entries").prepend(row);
                 } else {
-                    el.html(`<tr><td><i>${json.id}</i></td><td><b>${json.message}</b></td><td><strong>${json.severity}</strong></td></tr>`);
+                    el.html(`<tr id='${json.id}'><td><i>${json.id}</i></td><td><b>${json.message}</b></td><td><strong>${json.severity}</strong></td></tr>`);
                 }
             };
         </script>

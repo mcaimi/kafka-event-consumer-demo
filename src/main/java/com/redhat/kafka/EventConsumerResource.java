@@ -7,7 +7,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.redhat.kafka.entities.Event;
 import org.eclipse.microprofile.reactive.messaging.Channel;
-import org.jboss.resteasy.annotations.SseElementType;
+//import org.jboss.resteasy.reactive.annotations.SseElementType;
 
 import io.smallrye.mutiny.Multi;
 
@@ -20,7 +20,7 @@ public class EventConsumerResource {
     @GET
     @Path("/get")
     @Produces(MediaType.SERVER_SENT_EVENTS)
-    @SseElementType("application/json")
+   // @SseElementType("application/json")
     public Multi<Event> eventStream() {
       return events;
     }
