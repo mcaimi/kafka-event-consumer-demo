@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonLabels:
+  app: quarkus-consumer
+  kind: pipeline
+
+namespace: quarkus-consumer
+
+resources:
+  - namespace.yaml
+  - permissions.yaml
+  - maven-pvc.yaml
+  - pipeline-resources.yaml
+  - quarkus-build-task.yaml
+  - quarkus-maven-pipeline.yaml
+  - quarkus-maven-task.yaml
+  - quarkus-clone-task.yaml
+  - cleanup-workspace-task.yaml
