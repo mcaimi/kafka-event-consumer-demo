@@ -67,52 +67,10 @@ You can then execute your native executable with: `./target/consumer-1.0.0-SNAPS
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.html.
 
-## Building the artifact using Tekton on Openshift Container Platform (or Kubernetes)
+## Building the artifact using Tekton on Openshift Container Platform
 
-This example pipeline needs Nexus to store the Java artifact (the pipeline produces an _über-jar_).
-Please follow the steps described [here](https://github.com/mcaimi/k8s-demo-app) to deploy an instance of Sonatype Nexus on Openshift/Minikube.
-
-It also needs the Openshift Pipelines and GitOps Operators installed beforehand on the target cluster.
-
-### Install and run tekton pipeline manifests
-
-1. Create a new project:
-
-```bash
-$ oc new-project quarkus-consumer
-```
-
-2. Install tekton pipeline objects:
-
-For the compile-test-archive pipeline:
-
-```bash
-for i in pipeline-resources maven-pvc quarkus-maven-task quarkus-nexus-task quarkus-maven-pipeline; do
-  oc create -f tekton/$i.yaml -n quarkus-consumer
-done
-```
-
-For the container image build pipeline:
-
-```bash
-for i in build-pvc quarkus-build-task quarkus-build-pipeline; do
-  oc create -f tekton/$i.yaml -n quarkus-consumer
-done
-```
-
-3. Run the pipeline
-
-```bash
-$ oc create -f tekton/quarkus-maven-pipelinerun.yaml -n quarkus-consumer
-```
-
-### Deploy with ArgoCD
-
-1. Add the application descriptor to the Openshift GitOps Argo Cluster
-
-```bash
-$ oc apply -k openshift/consumer-argocd/
-```
+Please follow the steps described [here](https://github.com/mcaimi/k8s-demo-argocd) to deploy the CI environment.
+The repo contains automation that deploys the CI env, the application manifests and the tektok pipeline used to build the app itself.
 
 ## Related Guides
 
@@ -126,12 +84,4 @@ $ oc apply -k openshift/consumer-argocd/
 The application comes with a simple Angular frontend listening on the default quarkus HTTP server port:
 
 ![Web Frontend](/assets/consumer-frontend.png)
-
-###  Notes
-
-Container image build pipelines currently require the privileged SCC to be attached to the 'pipeline' ServiceAccount in order to successfully run:
-
-```bash
-oc adm policy add-scc-to-user privileged -z system:serviceaccount:kafka-event-consumer-demo:pipeline
-```
 
